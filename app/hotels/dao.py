@@ -32,8 +32,6 @@ class HotelDAO(BaseDAO):
                 )
                 .subquery("filter_booking")
             )
-
-            # CTE to calculate rooms left for each hotel
             hotels_rooms_left = (
                 select(
                     (Hotels.rooms_quantity - func.count(bookings_for_selected_dates.c.room_id)).label("rooms_left"),
@@ -44,8 +42,6 @@ class HotelDAO(BaseDAO):
                 .group_by(Hotels.rooms_quantity, Rooms.hotel_id)
                 .cte("hotels_rooms_left")
             )
-
-            # Final query to get hotel info and rooms left
             get_hotel_info = (
                 select(
                     Hotels.__table__.columns,

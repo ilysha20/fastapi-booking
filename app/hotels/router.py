@@ -4,7 +4,7 @@ from typing import List
 from fastapi import APIRouter
 from fastapi_cache.decorator import cache
 from pydantic import TypeAdapter
-from pydantic.v1 import parse_obj_as
+from pydantic import parse_obj_as
 
 from app.hotels.dao import HotelDAO
 from app.hotels.rooms.dao import RoomDAO
@@ -22,10 +22,9 @@ async def get_hotel_by_location_and_time(
         date_from: date,
         date_to: date
 ):
-    await asyncio.sleep(1)
     hotels = await HotelDAO.search_form_hotels(location, date_from, date_to)
-    hotel_json = hotels
-    return hotel_json
+    hotels_json = parse_obj_as(List[HotelsInfo], hotels)
+    return hotels_json
 
 @router.get("/{hotel_id}/rooms")
 async def get_rooms_by_time(hotel_id: int, date_from: date, date_to: date):
