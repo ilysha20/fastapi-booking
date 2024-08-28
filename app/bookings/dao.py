@@ -19,7 +19,6 @@ class BookingDAO(BaseDAO):
             date_to: date,
     ):
         async with async_session_maker() as session:
-            # Define the CTE for booked rooms
             booked_rooms = select(Bookings).where(
                 and_(
                     Bookings.room_id == room_id,
@@ -50,16 +49,13 @@ class BookingDAO(BaseDAO):
             rooms_left = await session.execute(get_rooms_left)
             rooms_left = rooms_left.scalar()
 
-            # Check if rooms_left is None or zero
             if rooms_left is None or rooms_left <= 0:
                 return None
 
-            # Fetch the price of the room
             get_price = select(Rooms.price).filter_by(id=room_id)
             price = await session.execute(get_price)
             price = price.scalar()
 
-            # Insert the booking if there are rooms left
             add_booking = insert(Bookings).values(
                 room_id=room_id,
                 user_id=user_id,

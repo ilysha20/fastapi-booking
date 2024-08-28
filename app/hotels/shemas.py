@@ -1,4 +1,3 @@
-from datetime import date
 from typing import Optional
 
 from pydantic import BaseModel
@@ -8,10 +7,11 @@ class HotelsInfo(BaseModel):
     id: int
     name: str
     location: str
-    services: Optional[dict]
+    services: Optional[str]
     rooms_quantity: int
     image_id: Optional[int]
     rooms_left: int
 
     class Config:
-        from_attributes = True
+        arbitrary_types_allowed = True
+        orm_mode = True

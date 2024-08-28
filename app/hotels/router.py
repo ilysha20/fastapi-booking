@@ -16,14 +16,15 @@ router = APIRouter(
 )
 
 @router.get("/{location}")
+@cache(expire=20)
 async def get_hotel_by_location_and_time(
         location: str,
-        date_from:
-        date,date_to: date
+        date_from: date,
+        date_to: date
 ):
     await asyncio.sleep(1)
     hotels = await HotelDAO.search_form_hotels(location, date_from, date_to)
-    hotel_json = parse_obj_as(List[HotelsInfo], hotels)
+    hotel_json = hotels
     return hotel_json
 
 @router.get("/{hotel_id}/rooms")
